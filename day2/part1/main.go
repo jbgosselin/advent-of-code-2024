@@ -19,20 +19,20 @@ func checkInc(a, b int) bool {
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	safeLevels := 0
+	safeReports := 0
 
 	for scanner.Scan() {
 		values := strings.Split(scanner.Text(), " ")
 
 		if len(values) < 2 {
-			safeLevels += 1
+			safeReports += 1
 			continue
 		}
 
-		level := make([]int, len(values))
+		report := make([]int, len(values))
 		for i, v := range values {
 			var err error
-			level[i], err = strconv.Atoi(v)
+			report[i], err = strconv.Atoi(v)
 			if err != nil {
 				log.Fatalf("invalid number: %s", v)
 			}
@@ -40,17 +40,17 @@ func main() {
 
 		checkFn := checkDec
 
-		if level[0] < level[1] {
+		if report[0] < report[1] {
 			checkFn = checkInc
 		}
 
 		safe := true
-		for i := 0; i < len(level)-1 && safe; i++ {
-			safe = checkFn(level[i], level[i+1])
+		for i := 0; i < len(report)-1 && safe; i++ {
+			safe = checkFn(report[i], report[i+1])
 		}
 		if safe {
-			safeLevels += 1
-			log.Printf("level: %v, safe: %v", level, safe)
+			safeReports += 1
+			log.Printf("report: %v, safe: %v", report, safe)
 		}
 	}
 
@@ -58,5 +58,5 @@ func main() {
 		log.Fatalf("reading standard input: %v", err)
 	}
 
-	log.Printf("safeLevels: %d", safeLevels)
+	log.Printf("safeReports: %d", safeReports)
 }

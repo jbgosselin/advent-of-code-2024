@@ -16,35 +16,35 @@ func checkInc(a, b int) bool {
 	return a < b && b-a <= 3
 }
 
-func checkLevel(level []int) bool {
+func checkReport(report []int) bool {
 	checkFn := checkDec
 
-	if level[0] < level[1] {
+	if report[0] < report[1] {
 		checkFn = checkInc
 	}
 
-	for i := 0; i < len(level)-1; i++ {
-		if !checkFn(level[i], level[i+1]) {
+	for i := 0; i < len(report)-1; i++ {
+		if !checkFn(report[i], report[i+1]) {
 			return false
 		}
 	}
 	return true
 }
 
-func fullCheckLevel(level []int) bool {
-	if checkLevel(level) {
+func fullCheckReport(report []int) bool {
+	if checkReport(report) {
 		return true
 	}
 
-	for i := range level {
-		var subLevel []int
+	for i := range report {
+		var subReport []int
 		if i > 0 {
-			subLevel = append(subLevel, level[:i]...)
+			subReport = append(subReport, report[:i]...)
 		}
-		if i < len(level)-1 {
-			subLevel = append(subLevel, level[i+1:]...)
+		if i < len(report)-1 {
+			subReport = append(subReport, report[i+1:]...)
 		}
-		if checkLevel(subLevel) {
+		if checkReport(subReport) {
 			return true
 		}
 	}
@@ -65,16 +65,16 @@ func main() {
 			continue
 		}
 
-		level := make([]int, len(values))
+		report := make([]int, len(values))
 		for i, v := range values {
 			var err error
-			level[i], err = strconv.Atoi(v)
+			report[i], err = strconv.Atoi(v)
 			if err != nil {
 				log.Fatalf("invalid number: %s", v)
 			}
 		}
 
-		if fullCheckLevel(level) {
+		if fullCheckReport(report) {
 			safeLevels += 1
 		}
 	}
