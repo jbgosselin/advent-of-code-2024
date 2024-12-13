@@ -53,40 +53,48 @@ func main() {
 		log.Fatalf("reading standard input: %v", scanner.Err())
 	}
 
-	pos := &Pos{X: 0, Y: 0, D: North}
-
-InitPos:
-	for i, row := range lab {
-		for j, cell := range row {
-			if cell == '^' {
-				pos.X = j
-				pos.Y = i
-				break InitPos
-			}
-		}
+	pos := findInitPos(lab)
+	if pos == nil {
+		log.Fatalf("No initial position found")
 	}
 
+	// number of cells explored
 	explored := 0
 
 	for {
+		// mark current cell as explored if not already
 		if lab[pos.Y][pos.X] != 'X' {
 			lab[pos.Y][pos.X] = 'X'
 			explored++
 		}
 
+		// get the next position
 		next := pos.GetNextPos()
+		// if the next position is out of bounds, we are done
 		if next.Y < 0 || next.Y >= len(lab) || next.X < 0 || next.X >= len(lab[next.Y]) {
 			break
 		}
 
+		// if the next position is a wall, turn right
 		if lab[next.Y][next.X] == '#' {
 			pos.TurnRight()
 			continue
 		}
 
+		// if the next position is empty, move to it
 		pos = &next
 	}
 
 	log.Printf("Explored: %d", explored)
+}
 
+func findInitPos(lab [][]byte) *Pos {
+	for i, row := range lab {
+		for j, cell := range row {
+			if cell == '^' {
+				return &Pos{X: j, Y: i, D: North}
+			}
+		}
+	}
+	return nil
 }
